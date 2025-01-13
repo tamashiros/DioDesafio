@@ -1,0 +1,50 @@
+CREATE TABLE Cliente (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    tipo CHAR(2) CHECK (tipo IN ('PJ', 'PF'))
+);
+
+CREATE TABLE FormaPagamento (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    cliente_id INT FOREIGN KEY REFERENCES Cliente(id),
+    tipo VARCHAR(50),
+    dados_pagamento VARCHAR(255)
+);
+
+CREATE TABLE Endereco (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    cliente_id INT FOREIGN KEY REFERENCES Cliente(id),
+    tipo VARCHAR(20),
+    -- ... outros campos do endereço ...
+);
+
+CREATE TABLE Produto (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nome VARCHAR(100),
+    descricao TEXT,
+    valor DECIMAL(10,2)
+);
+
+CREATE TABLE Pedido (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    cliente_id INT FOREIGN KEY REFERENCES Cliente(id),
+    data_pedido DATE,
+    status VARCHAR(20)
+);
+
+CREATE TABLE ItemPedido (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    pedido_id INT FOREIGN KEY REFERENCES Pedido(id),
+    produto_id INT FOREIGN KEY REFERENCES Produto(id),
+    quantidade INT
+);
+
+CREATE TABLE Entrega (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    pedido_id INT FOREIGN KEY REFERENCES Pedido(id),
+    status VARCHAR(20),
+    codigo_rastreio VARCHAR(50),
+    data_entrega DATE,
+    endereco_id INT FOREIGN KEY REFERENCES Endereco(id)
+);
